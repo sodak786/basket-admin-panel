@@ -36,11 +36,14 @@ body[id="MAIN"]{
       margin-bottom: 150px;
     }
     .login-panel{
-      display: flex;
+      display: none;
       position: absolute;
       height: 570px;
       width: 500px;
       background-color: green;
+    }
+    .loggedIn{
+      display: flex;
     }
   }
 
