@@ -38,7 +38,7 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
             <div class="header-pages">
                 <a href="/vysledky.php">Výsledky</a>
                 <a href="/kalendar.php">Kalendář</a>
-                <a href="/statistika.php">Statistika</a>
+                <a href="/statistiky.php">Statistika</a>
             </div>
         </header>
         <main>
