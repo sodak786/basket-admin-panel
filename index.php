@@ -31,10 +31,13 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
         <title>Document</title>
         <link rel="stylesheet" href="index.scss">
         <script src="script.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
     </head>
     <body id="MAIN">
         <header>
-            <div class="index-button">micek</div>
+            <a href="/index.php" class="index-button"><img src="/images/sport-basketball-svgrepo-com(1).svg" alt="" class="micek"></a>
             <div class="header-pages">
                 <a href="/vysledky.php">Výsledky</a>
                 <a href="/kalendar.php">Kalendář</a>
@@ -44,7 +47,7 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
         <main>
             <h1 class="header-text">Basketball Admin Panel</h1>
             <?php if(!$isLoggedin): ?>
-            <button id="login-button" onclick="login();">Přihlášení</button>
+            <button id="login-button" onclick="login();">Přihlásit se</button>
             <div class="login-panel" id="login-panel">
                 <form action="" method="POST">
                     <p>Přihlášení</p>

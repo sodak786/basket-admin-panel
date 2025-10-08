@@ -7,7 +7,7 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
     $isLoggedin=true;
 }
 
-$season = $_GET["season"] && null;
+$season = $_GET["season"] ?? null;
 if(isset($season)){
     $_SESSION["season"]=$season;
 }
@@ -37,9 +37,9 @@ if(isset($season)){
     </form>
     <label for="season">Sezona:</label>
     <select name="season" id="season" onchange="window.location.href='vysledky.php?season=' + this.value;">
-        <option value="25/26">25/26</option>
-        <option value="24/25">24/25</option>
-        <option value="23/24">23/24</option>
+        <option value="25/26" <?= ($season === "25/26") ? "selected" : "" ?>>25/26</option>
+        <option value="24/25" <?= ($season === "24/25") ? "selected" : "" ?>>24/25</option>
+        <option value="23/24" <?= ($season === "23/24") ? "selected" : "" ?>>23/24</option>
     </select>
     <?php if(!$isLoggedin): ?>
     <?php else: ?>
