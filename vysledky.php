@@ -16,17 +16,17 @@ if ($season) {
                 t1.name AS home_team,
                 t2.name AS away_team,
                 g.home_score,
+                g.away_score,
+                g.status,
                 g.home_score_1,
                 g.home_score_2,
                 g.home_score_3,
                 g.home_score_4,
-                g.away_score,
                 g.away_score_1,
                 g.away_score_2,
                 g.away_score_3,
                 g.away_score_4,
-                g.game_date,
-                g.status
+                g.game_date
             FROM games g
             JOIN teams t1 ON g.home_team_id = t1.id
             JOIN teams t2 ON g.away_team_id = t2.id
@@ -36,32 +36,31 @@ if ($season) {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $season);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $result_games = $stmt->get_result();
 
 } else {
-    // no season selected → show all games
     $sql = "SELECT 
                 g.id,
                 t1.name AS home_team,
                 t2.name AS away_team,
                 g.home_score,
+                g.away_score,
+                g.status,
                 g.home_score_1,
                 g.home_score_2,
                 g.home_score_3,
                 g.home_score_4,
-                g.away_score,
                 g.away_score_1,
                 g.away_score_2,
                 g.away_score_3,
                 g.away_score_4,
-                g.game_date,
-                g.status
+                g.game_date 
             FROM games g
             JOIN teams t1 ON g.home_team_id = t1.id
             JOIN teams t2 ON g.away_team_id = t2.id
             ORDER BY g.game_date DESC";
 
-    $result = $conn->query($sql);
+    $result_games = $conn->query($sql);
 }
 
 
@@ -70,6 +69,14 @@ $isLoggedin=false;
 
 if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
     $isLoggedin=true;
+}
+
+
+$tymy = [];
+$result_teams = $conn->query("SELECT id, name FROM teams ORDER BY id ASC");
+
+while ($row = $result_teams->fetch_assoc()) {
+    $tymy[] = $row;
 }
 
 
@@ -113,34 +120,31 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
     <?php if(!$isLoggedin): ?>
     <?php else: ?>
         <p>Přidat výsledek</p>
-        <button class="add-result-button" onclick="pridatVysledek()">+</button>
+        <button class="add-result-button" onclick="togglePanel()">+</button>
         <div id="add-result-panel">
-            <form action="" method="POST">
+            <form action="pridat_zapas.php" method="POST">
                 <label for="datum">Datum zápasu: </label>
                 <input type="date" name="datum" placeholder="Datum">
                 <br>
                 <label for="home-team">Domaci tym:</label>
                 <select name="home-team" id="home-team">
-                    <option value="Lakers">Lakers</option>
-                    <option value="Warriors">Warriors</option>
-                    <option value="Bulls">Bulls</option>
-                    <option value="Celtics">Celtics</option>
-                    <option value="Cavaliers">Cavaliers</option>
-                    <option value="Mavericks">Mavericks</option>
-                    <option value="Nuggets">Nuggets</option>
-                    <option value="Heat">Heat</option>
+                    <?php foreach ($tymy as $tym): ?>
+                        <option value="<?= $tym['id'] ?>"><?= htmlspecialchars($tym['name']) ?></option>
+                    <?php endforeach; ?>
                 </select>
                 <br>
                 <label for="away-team">Hostujici tym:</label>
                 <select name="away-team" id="away-team">
-                    <option value="Lakers">Lakers</option>
-                    <option value="Warriors">Warriors</option>
-                    <option value="Bulls">Bulls</option>
-                    <option value="Celtics">Celtics</option>
-                    <option value="Cavaliers">Cavaliers</option>
-                    <option value="Mavericks">Mavericks</option>
-                    <option value="Nuggets">Nuggets</option>
-                    <option value="Heat">Heat</option>
+                    <?php foreach ($tymy as $tym): ?>
+                        <option value="<?= $tym['id'] ?>"><?= htmlspecialchars($tym['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <br>
+                <label>Sezona: </label>
+                <select name="sezona">
+                    <option value="25/26">25/26</option>
+                    <option value="24/25">24/25</option>
+                    <option value="23/24">23/24</option>
                 </select>
                 <br><br>
                 <h2>Skóre</h2>
@@ -153,14 +157,14 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
                 <input type="number" name="domaci-3" class="skore">
                 <input type="number" name="domaci-4" class="skore">
                 <br>
-                <label for="domaci-celkem">Hostující (celkem):</label>
-                <input type="number" name="domaci-celkem" class="skore">
+                <label for="hostujici-celkem">Hostující (celkem):</label>
+                <input type="number" name="hostujici-celkem" class="skore">
                 <br>
                 <label>Čtvrtiny: </label>
-                <input type="number" name="domaci-1" class="skore">
-                <input type="number" name="domaci-2" class="skore">
-                <input type="number" name="domaci-3" class="skore">
-                <input type="number" name="domaci-4" class="skore">
+                <input type="number" name="hoste-1" class="skore">
+                <input type="number" name="hoste-2" class="skore">
+                <input type="number" name="hoste-3" class="skore">
+                <input type="number" name="hoste-4" class="skore">
 
                 <button type="submit">Přidat</button>
             </form>
@@ -179,8 +183,8 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
             <th>Status</th>
         </tr>
 
-        <?php if($result && $result->num_rows > 0): ?>
-            <?php while($row = $result->fetch_assoc()): ?>
+        <?php if($result_games && $result_games->num_rows > 0): ?>
+            <?php while($row = $result_games->fetch_assoc()): ?>
                 <tr>
                     <td rowspan="2"><?= htmlspecialchars($row["game_date"])?></td>
                     <td><?= htmlspecialchars($row["home_team"])?></td>
@@ -190,6 +194,15 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
                     <td><?= htmlspecialchars($row["home_score_3"])?></td>
                     <td><?= htmlspecialchars($row["home_score_4"])?></td>
                     <td rowspan="2"><?= htmlspecialchars($row["status"])?></td>
+                <?php if($isLoggedin):?>
+                    <td rowspan="2">
+                        <a href="smazat_zapas.php?id=<?= $row['id'] ?>"
+                           onclick="return confirm('Opravdu chceš smazat tento zápas?');"
+                           style="color: rgba(0,0,0,0.84); font-size: 24px; text-decoration: none; font-weight:bold;">
+                            ✖
+                        </a>
+                    </td>
+                <?php endif;?>
                 </tr>
                 <tr>
                     <td><?= htmlspecialchars($row["away_team"])?></td>
