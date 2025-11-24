@@ -30,7 +30,7 @@ if ($season) {
             FROM games g
             JOIN teams t1 ON g.home_team_id = t1.id
             JOIN teams t2 ON g.away_team_id = t2.id
-            WHERE g.season = ?
+            WHERE g.season = ? AND g.status = 'finished'
             ORDER BY g.game_date DESC";
 
     $stmt = $conn->prepare($sql);
@@ -58,6 +58,7 @@ if ($season) {
             FROM games g
             JOIN teams t1 ON g.home_team_id = t1.id
             JOIN teams t2 ON g.away_team_id = t2.id
+            WHERE g.status = 'finished'
             ORDER BY g.game_date DESC";
 
     $result_games = $conn->query($sql);
@@ -103,14 +104,16 @@ while ($row = $result_teams->fetch_assoc()) {
     </div>
 </header>
 <main>
-    <h1 class="header-text">Vysledky</h1>
+    <h1 class="header-text">Výsledky</h1>
     <div class="header-doplnky">
-        <label for="season">Sezona:</label>
-        <select name="season" id="season" onchange="window.location.href='vysledky.php?season=' + this.value;">
-            <option value="25/26" <?= ($season === "25/26") ? "selected" : "" ?>>25/26</option>
-            <option value="24/25" <?= ($season === "24/25") ? "selected" : "" ?>>24/25</option>
-            <option value="23/24" <?= ($season === "23/24") ? "selected" : "" ?>>23/24</option>
-        </select>
+        <div>
+            <label for="season">Sezóna:</label>
+            <select name="season" id="season" onchange="window.location.href='vysledky.php?season=' + this.value;">
+                <option value="25/26" <?= ($season === "25/26") ? "selected" : "" ?>>25/26</option>
+                <option value="24/25" <?= ($season === "24/25") ? "selected" : "" ?>>24/25</option>
+                <option value="23/24" <?= ($season === "23/24") ? "selected" : "" ?>>23/24</option>
+            </select>
+        </div>
     <?php if(!empty($season)): ?>
         <p>vybral sis sezonu <?= htmlspecialchars($season, ENT_QUOTES, 'UTF-8') ?></p>
     <?php else: ?>
@@ -119,8 +122,7 @@ while ($row = $result_teams->fetch_assoc()) {
 
     <?php if(!$isLoggedin): ?>
     <?php else: ?>
-        <p>Přidat výsledek</p>
-        <button class="add-result-button" onclick="togglePanel()">+</button>
+        <button class="add-result-button" onclick="togglePanel()">Přidat výsledek</button>
         <div id="add-result-panel">
             <form action="pridat_zapas.php" method="POST">
                 <label for="datum">Datum zápasu: </label>
@@ -198,8 +200,8 @@ while ($row = $result_teams->fetch_assoc()) {
                     <td rowspan="2">
                         <a href="smazat_zapas.php?id=<?= $row['id'] ?>"
                            onclick="return confirm('Opravdu chceš smazat tento zápas?');"
-                           style="color: rgba(0,0,0,0.84); font-size: 24px; text-decoration: none; font-weight:bold;">
-                            ✖
+                           style="color: rgba(0,0,0,0.84); font-size: 22px; text-decoration: none; font-weight:bold;">
+                            🗑️
                         </a>
                     </td>
                 <?php endif;?>

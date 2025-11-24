@@ -50,16 +50,16 @@ if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"]==true){
             <button id="login-button" onclick="login();">Přihlásit se</button>
             <div class="login-panel" id="login-panel">
                 <form action="" method="POST">
-                    <p>Přihlášení</p>
+                    <h2>Přihlášení</h2>
                     <input type="text" name="uname" placeholder="jméno">
                     <input type="password" name="password" placeholder="heslo">
                     <button type="submit">Přihlásit se</button>
                 </form>
             </div>
             <?php else: ?>
-            <p>Admin byl přihlášen</p>
+            <p style="margin-top: 15px">Admin byl přihlášen</p>
                 <form action="" method="POST">
-                    <button type="submit" name="logout">Odhlásit</button>
+                    <button type="submit" name="logout">Odhlásit se</button>
                 </form>
             <?php endif; ?>
         </main>

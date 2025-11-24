@@ -80,7 +80,7 @@ $result = $conn->query($sql);
                     <label>Pozice:</label>
                     <input type="text" name="position" required>
                     <select name="home-team" >
-                        <option value="<?= $tym['id'] ?>"><?= htmlspecialchars($tym['name']) ?></option>
+                        <option value="<?= $team['id'] ?>"><?= htmlspecialchars($team['name']) ?></option>
                     </select>
 
                     <label>Výška (cm):</label>
@@ -101,13 +101,25 @@ $result = $conn->query($sql);
     <p>Coach: <?= htmlspecialchars($team['coach']) ?></p>
 
     <h2>Hráči</h2>
-    <ul>
-        <?php while($p = $players->fetch_assoc()): ?>
-            <li onclick="window.location.href='player.php?id=<?= $p['id'] ?>'">
-                <?= htmlspecialchars($p['first_name'] . ' ' . $p['last_name']) ?>
-            </li>
-        <?php endwhile; ?>
-    </ul>
+
+    <?php while ($p = $players->fetch_assoc()): ?>
+        <div class="player-item">
+        <span onclick="window.location.href='player.php?id=<?= $p['id'] ?>'">
+            <?= htmlspecialchars($p['first_name'] . ' ' . $p['last_name']) ?>
+        </span>
+
+            <?php if ($isLoggedin): ?>
+                <form action="smazat_hrace.php" method="POST"
+                      onsubmit="return confirm('Opravdu chceš smazat tohoto hráče?');"
+                      style="display:inline-block;">
+                    <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                    <input type="hidden" name="team_id" value="<?= $team['id'] ?>">
+                    <button type="submit" class="delete-btn">🗑️</button>
+                </form>
+            <?php endif; ?>
+        </div>
+    <?php endwhile; ?>
+
 </main>
 <footer></footer>
 </body>
