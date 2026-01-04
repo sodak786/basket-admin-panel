@@ -115,7 +115,6 @@ while ($row = $result_teams->fetch_assoc()) {
             </select>
         </div>
     <?php if(!empty($season)): ?>
-        <p>vybral sis sezonu <?= htmlspecialchars($season, ENT_QUOTES, 'UTF-8') ?></p>
     <?php else: ?>
         <p>Vyber si sezónu z nabídky</p>
     <?php endif; ?>
@@ -221,6 +220,67 @@ while ($row = $result_teams->fetch_assoc()) {
     </table>
 </main>
 <footer></footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const form = document.querySelector('#add-result-panel form');
+        if (!form) return;
+
+        const homeTotal = form.querySelector('input[name="domaci-celkem"]');
+        const awayTotal = form.querySelector('input[name="hostujici-celkem"]');
+
+        const homeQs = [
+            form.querySelector('input[name="domaci-1"]'),
+            form.querySelector('input[name="domaci-2"]'),
+            form.querySelector('input[name="domaci-3"]'),
+            form.querySelector('input[name="domaci-4"]')
+        ];
+
+        const awayQs = [
+            form.querySelector('input[name="hoste-1"]'),
+            form.querySelector('input[name="hoste-2"]'),
+            form.querySelector('input[name="hoste-3"]'),
+            form.querySelector('input[name="hoste-4"]')
+        ];
+
+        function sumInputs(list) {
+            let sum = 0;
+            for (let i = 0; i < list.length; i++) {
+                let v = parseInt(list[i].value);
+                if (!isNaN(v)) sum += v;
+            }
+            return sum;
+        }
+
+        function updateTotals() {
+            homeTotal.value = sumInputs(homeQs);
+            awayTotal.value = sumInputs(awayQs);
+        }
+
+        for (let i = 0; i < homeQs.length; i++) {
+            homeQs[i].addEventListener('input', updateTotals);
+        }
+        for (let i = 0; i < awayQs.length; i++) {
+            awayQs[i].addEventListener('input', updateTotals);
+        }
+
+        form.addEventListener('submit', function(e) {
+
+            const h = sumInputs(homeQs);
+            const a = sumInputs(awayQs);
+
+            let ht = parseInt(homeTotal.value);
+            let at = parseInt(awayTotal.value);
+
+            if (h !== ht || a !== at) {
+                e.preventDefault();
+                alert("Součet čtvrtin neodpovídá celkovému skóre");
+            }
+        });
+
+    });
+</script>
 </body>
 </html>
 

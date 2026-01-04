@@ -64,30 +64,32 @@ $result = $conn->query($sql);
     <h1><?= htmlspecialchars($team['name']) ?></h1>
     <div class="header-doplnky">
         <?php if ($isLoggedin): ?>
-            <p>Přidat hráče</p>
-            <button class="add-result-button" onclick="togglePanel()">+</button>
+            <p>Coach: <?= htmlspecialchars($team['coach']) ?></p>
+            <button class="add-result-button" onclick="togglePanel()">Přidat hráče</button>
 
             <div id="add-result-panel" style="display:none;">
                 <form action="pridat_hrace.php" method="POST">
                     <input type="hidden" name="team_id" value="<?= $team['id'] ?>">
 
                     <label>Jméno:</label>
-                    <input type="text" name="first_name" required>
+                    <input type="text" name="first_name" required><br>
 
                     <label>Příjmení:</label>
-                    <input type="text" name="last_name" required>
+                    <input type="text" name="last_name" required><br>
 
                     <label>Pozice:</label>
-                    <input type="text" name="position" required>
-                    <select name="home-team" >
+                    <input type="text" name="position" required><br>
+
+                    <label>Tým:</label>
+                    <select name="home-team">
                         <option value="<?= $team['id'] ?>"><?= htmlspecialchars($team['name']) ?></option>
-                    </select>
+                    </select><br>
 
                     <label>Výška (cm):</label>
-                    <input type="number" name="height_cm" required>
+                    <input type="number" name="height_cm" required style="width: 80px">
 
                     <label>Váha (kg):</label>
-                    <input type="number" name="weight_kg" required>
+                    <input type="number" name="weight_kg" required style="width: 80px">
 
                     <label>Datum narození:</label>
                     <input type="date" name="birth_date" required>
@@ -98,28 +100,43 @@ $result = $conn->query($sql);
         <?php endif; ?>
 
     </div>
-    <p>Coach: <?= htmlspecialchars($team['coach']) ?></p>
 
-    <h2>Hráči</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Jméno</th>
+            <th>Pozice</th>
+            <th>Datum narození</th>
+        </tr>
+        </thead>
 
-    <?php while ($p = $players->fetch_assoc()): ?>
-        <div class="player-item">
-        <span onclick="window.location.href='player.php?id=<?= $p['id'] ?>'">
-            <?= htmlspecialchars($p['first_name'] . ' ' . $p['last_name']) ?>
-        </span>
+        <tbody>
+        <?php while ($p = $players->fetch_assoc()): ?>
+            <tr>
+                <td onclick="window.location.href='player.php?id=<?= $p['id'] ?>'"
+                    style="cursor:pointer;">
+                    <?= htmlspecialchars($p['first_name'] . ' ' . $p['last_name']) ?>
+                </td>
 
-            <?php if ($isLoggedin): ?>
-                <form action="smazat_hrace.php" method="POST"
-                      onsubmit="return confirm('Opravdu chceš smazat tohoto hráče?');"
-                      style="display:inline-block;">
-                    <input type="hidden" name="id" value="<?= $p['id'] ?>">
-                    <input type="hidden" name="team_id" value="<?= $team['id'] ?>">
-                    <button type="submit" class="delete-btn">🗑️</button>
-                </form>
-            <?php endif; ?>
-        </div>
-    <?php endwhile; ?>
+                <td><?= htmlspecialchars($p['position']) ?></td>
 
+                <td><?= htmlspecialchars($p['birth_date']) ?></td>
+
+                <?php if ($isLoggedin): ?>
+                    <td>
+                        <form action="smazat_hrace.php" method="POST"
+                              onsubmit="return confirm('Opravdu chceš smazat tohoto hráče?');"
+                              style="display:inline-block;">
+                            <input type="hidden" name="id" value="<?= $p['id'] ?>">
+                            <input type="hidden" name="team_id" value="<?= $team['id'] ?>">
+                            <button type="submit" class="delete-btn">🗑️</button>
+                        </form>
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endwhile; ?>
+        </tbody>
+    </table>
 </main>
 <footer></footer>
 </body>

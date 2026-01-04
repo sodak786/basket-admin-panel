@@ -66,12 +66,14 @@ $result = $stmt->get_result();
 <main>
     <h1>Tabulka</h1>
     <div class="header-doplnky">
-        <label for="season">Sezona:</label>
-        <select name="season" id="season" onchange="window.location.href='statistiky.php?season=' + this.value;">
-            <option value="25/26" <?= ($season === "25/26") ? "selected" : "" ?>>25/26</option>
-            <option value="24/25" <?= ($season === "24/25") ? "selected" : "" ?>>24/25</option>
-            <option value="23/24" <?= ($season === "23/24") ? "selected" : "" ?>>23/24</option>
-        </select>
+        <div>
+            <label for="season">Sezona:</label>
+            <select name="season" id="season" onchange="window.location.href='statistiky.php?season=' + this.value;">
+                <option value="25/26" <?= ($season === "25/26") ? "selected" : "" ?>>25/26</option>
+                <option value="24/25" <?= ($season === "24/25") ? "selected" : "" ?>>24/25</option>
+                <option value="23/24" <?= ($season === "23/24") ? "selected" : "" ?>>23/24</option>
+            </select>
+        </div>
         <?php if(!empty($season)): ?>
             <p>Výsledky za sezónu <?= htmlspecialchars($season, ENT_QUOTES, 'UTF-8') ?></p>
         <?php else: ?>
@@ -80,8 +82,7 @@ $result = $stmt->get_result();
 
         <?php if(!$isLoggedin): ?>
         <?php else: ?>
-            <p>Přidat tým</p>
-            <button class="add-result-button" onclick="togglePanel()">+</button>
+            <button class="add-result-button" onclick="togglePanel()">Přidat tým</button>
 
             <div id="add-result-panel" style="display:none;">
                 <form action="pridat_tym.php" method="POST">
@@ -94,7 +95,7 @@ $result = $stmt->get_result();
                     <label>Coach:</label>
                     <input type="text" name="coach" required>
 
-                    <button type="submit">Přidat tým</button>
+                    <button type="submit" style="margin-left: 110px;">Přidat tým</button>
                 </form>
             </div>
         <?php endif; ?>
@@ -108,7 +109,7 @@ $result = $stmt->get_result();
 
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-                <td onclick="window.location.href='team.php?id=<?= $row['id'] ?>'">
+                <td onclick="window.location.href='team.php?id=<?= $row['id'] ?>'" class="clickable-team">
                     <?= htmlspecialchars($row['name']) ?>
                 </td>
                 <td><?= $row['wins'] ?></td>

@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $season = $_POST["sezona"];
 
     if ($domaci == $hoste) {
-        die("Domácí a hosté musí být různí.");
+        die("Domácí a hosté musí být různí");
     }
 
     $sql = "INSERT INTO games 

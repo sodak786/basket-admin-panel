@@ -61,17 +61,18 @@ $isLoggedin = isset($_SESSION["loggedIn"]);
             </div>
         </header>
         <main>
-            <h1>Kalendář zápasů</h1>
+            <h1>Nadcházející zápasy</h1>
             <div class="header-doplnky">
-                <label>Sezona:</label>
-                <select onchange="window.location.href='kalendar.php?season=' + this.value">
-                    <option value="25/26" <?= $season === "25/26" ? "selected" : "" ?>>25/26</option>
-                    <option value="24/25" <?= $season === "24/25" ? "selected" : "" ?>>24/25</option>
-                    <option value="23/24" <?= $season === "23/24" ? "selected" : "" ?>>23/24</option>
-                </select>
+                <div>
+                    <label>Sezóna:</label>
+                    <select onchange="window.location.href='kalendar.php?season=' + this.value">
+                        <option value="25/26" <?= $season === "25/26" ? "selected" : "" ?>>25/26</option>
+                        <option value="24/25" <?= $season === "24/25" ? "selected" : "" ?>>24/25</option>
+                        <option value="23/24" <?= $season === "23/24" ? "selected" : "" ?>>23/24</option>
+                    </select>
+                </div>
                 <?php if ($isLoggedin): ?>
-                    <p>Přidat nový plánovaný zápas</p>
-                    <button onclick="togglePanel()">+</button>
+                    <button onclick="togglePanel()" class="add-result-button">Naplánovat nový zápas</button>
 
                     <div id="add-result-panel" style="display:none;">
                         <form action="pridat_plan_zapas.php" method="POST">
@@ -103,7 +104,6 @@ $isLoggedin = isset($_SESSION["loggedIn"]);
                         </form>
                     </div>
                 <?php endif; ?>
-                <h2>Nadcházející zápasy</h2>
             </div>
             <table>
                 <tr>

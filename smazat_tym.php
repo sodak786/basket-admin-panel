@@ -4,7 +4,7 @@ require "db.php";
 session_start();
 
 if (!isset($_SESSION["loggedIn"]) || $_SESSION["loggedIn"] !== true) {
-    die("Nejsi přihlášen.");
+    die("Nejsi přihlášen");
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
