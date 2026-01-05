@@ -15,10 +15,6 @@ $team_id = $_GET["id"];
 $team = $conn->query("SELECT * FROM teams WHERE id = $team_id")->fetch_assoc();
 
 $players = $conn->query("SELECT * FROM players WHERE team_id = $team_id");
-?>
-<?php
-global $conn;
-include "db.php";
 
 $sql = "SELECT 
             t.id,

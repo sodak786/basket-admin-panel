@@ -298,7 +298,6 @@ body[id="STATISTIKY"]{
 }
 body[id="TEAM"]{
   main{
-
     table{
       border-spacing: 40px;
       text-align: center;
@@ -355,6 +354,13 @@ body[id="TEAM"]{
 
           .skore{
             max-width: 60px;
+          }
+          button{
+            border: none;
+            border-bottom-color: currentcolor;
+            border-bottom: 1px solid #706b68;
+            padding: 4px;
+            cursor: pointer;
           }
         }
       }
